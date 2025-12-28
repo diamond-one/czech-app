@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Flashcard from '../../components/Flashcard';
 import FrameCard from '../../components/FrameCard';
 import OnboardingModal from '../../components/OnboardingModal';
+import FastTrackModal from '../../components/FastTrackModal';
 import { calculateNextReview } from '../../utils/srs';
 import curriculum from '../../data/curriculum.json';
 
@@ -38,6 +39,7 @@ export default function LearnPage() {
     // Retention State
     const [streak, setStreak] = useState(0);
     const [nextReviewTime, setNextReviewTime] = useState(null);
+    const [showFastTrack, setShowFastTrack] = useState(false);
 
     // Load progress & streak from localStorage
     useEffect(() => {
@@ -400,6 +402,39 @@ export default function LearnPage() {
         }
     };
 
+
+
+    // Fast Track Handler
+    const handleFastTrackComplete = (result) => {
+        // Result: { success: bool, learnedItems: [] }
+        const newProgress = { ...progress };
+        const now = new Date();
+
+        // 1. Commit passed items
+        if (result.learnedItems && result.learnedItems.length > 0) {
+            result.learnedItems.forEach(item => {
+                newProgress[item.id] = {
+                    id: item.id,
+                    level: 1, // Assume mastered
+                    interval: 10, // Jump to 10 days
+                    ease: 2.5,
+                    nextReviewDate: new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+                    spokenCount: 3,
+                    history: [{ date: now.toISOString(), rating: 'fast_track' }]
+                };
+            });
+            saveProgress(newProgress);
+            setProgress(newProgress);
+        }
+
+        setShowFastTrack(false);
+
+        // Force refresh if success to update queue
+        if (result.success) {
+            window.location.reload();
+        }
+    };
+
     // Helper: Get supporting words for current phrase
     const getSupportingWords = (phrase) => {
         if (!phrase.word_ids) return [];
@@ -563,6 +598,16 @@ export default function LearnPage() {
                                         </button>
                                     )}
 
+                                    {/* 5. Fast Track Button (Gauntlet) */}
+                                    {(unlockEligible === 'stable_block' || unlockEligible === 'eligible') && (
+                                        <button
+                                            onClick={() => setShowFastTrack(true)}
+                                            className="mt-4 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold rounded-lg shadow-md hover:scale-105 transition-transform flex items-center justify-center gap-2"
+                                        >
+                                            <span>⚡ Fast Track (Test Out)</span>
+                                        </button>
+                                    )}
+
                                     {/* 4. Return Home (Always available fallback) */}
                                     <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 mt-2">
                                         Return Home
@@ -580,6 +625,15 @@ export default function LearnPage() {
                     </div>
                 )}
             </div>
+
+            <FastTrackModal
+                isOpen={showFastTrack}
+                onClose={() => setShowFastTrack(false)}
+                curriculum={curriculum}
+                userLevel={userLevel}
+                progress={progress}
+                onComplete={handleFastTrackComplete}
+            />
         </main>
     );
 }
