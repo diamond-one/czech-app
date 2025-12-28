@@ -72,6 +72,7 @@ export default function LearnPage() {
     useEffect(() => {
         if (!isLoaded) return;
         if (isPracticeMode) return;
+        if (queue.length > 0) return; // Prevent queue rebuild if we have active cards (Fixes onboarding wipe)
 
         let calculatedLevel = 1;
         let stats = { phrasesMastered: 0, totalPhrases: 0, framesUsable: 0, totalFrames: 0 };
@@ -543,7 +544,7 @@ export default function LearnPage() {
 
                         <div className="border-t pt-4 w-full flex justify-center">
                             <button onClick={startPractice} className="text-gray-500 font-medium hover:text-brand-teal transition-colors flex items-center gap-2">
-                                <span>Unlimited Practice Mode</span>
+                                <span>Review All Words</span>
                                 <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">No SRS impact</span>
                             </button>
                         </div>
