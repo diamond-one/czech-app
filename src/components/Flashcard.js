@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import AudioRecorder from './AudioRecorder';
 
 export default function Flashcard({ card, supportingWords = [], onRate, onRecording, progress = null, autoRecord = false }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [hasRecorded, setHasRecorded] = useState(false);
+    const recorderRef = useRef(null);
 
     const spokenCount = progress ? (progress.spokenCount || 0) : 0;
 
@@ -66,6 +67,7 @@ export default function Flashcard({ card, supportingWords = [], onRate, onRecord
             <div className="w-full">
                 <p className="text-sm text-gray-500 text-center mb-2">Speak it aloud:</p>
                 <AudioRecorder
+                    ref={recorderRef}
                     onRecordingComplete={() => {
                         setHasRecorded(true);
                         if (onRecording) onRecording();
@@ -82,7 +84,10 @@ export default function Flashcard({ card, supportingWords = [], onRate, onRecord
             <div className="w-full flex flex-col items-center gap-4">
                 {!isRevealed ? (
                     <button
-                        onClick={() => setIsRevealed(true)}
+                        onClick={() => {
+                            recorderRef.current?.stopRecording();
+                            setIsRevealed(true);
+                        }}
                         className="px-6 py-2 bg-brand-blue text-white font-semibold rounded-lg hover:bg-opacity-90 transition-colors"
                     >
                         Show Answer

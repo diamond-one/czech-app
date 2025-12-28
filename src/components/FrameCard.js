@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import AudioRecorder from './AudioRecorder';
 
 /*
@@ -13,6 +13,7 @@ import AudioRecorder from './AudioRecorder';
 export default function FrameCard({ frame, examples = [], onResult, autoRecord = false }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [hasRecorded, setHasRecorded] = useState(false);
+    const recorderRef = useRef(null);
 
     const handleResult = (success) => {
         setIsRevealed(false);
@@ -56,8 +57,10 @@ export default function FrameCard({ frame, examples = [], onResult, autoRecord =
 
             {/* Audio Recorder */}
             {/* Audio Recorder */}
+            {/* Audio Recorder */}
             <div className="w-full">
                 <AudioRecorder
+                    ref={recorderRef}
                     onRecordingComplete={() => {
                         setHasRecorded(true);
                         setIsRevealed(true);
@@ -72,7 +75,10 @@ export default function FrameCard({ frame, examples = [], onResult, autoRecord =
             <div className="w-full flex flex-col items-center gap-4">
                 {!isRevealed ? (
                     <button
-                        onClick={() => setIsRevealed(true)}
+                        onClick={() => {
+                            recorderRef.current?.stopRecording();
+                            setIsRevealed(true);
+                        }}
                         className={`px-6 py-3 w-full font-semibold rounded-lg transition-colors ${hasRecorded
                             ? 'bg-brand-blue text-white hover:bg-opacity-90'
                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'

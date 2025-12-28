@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
-export default function AudioRecorder({ onRecordingComplete, autoStart = false, nativeAudioSrc = null }) {
+const AudioRecorder = forwardRef(({ onRecordingComplete, autoStart = false, nativeAudioSrc = null }, ref) => {
     const [isRecording, setIsRecording] = useState(false);
     const [audioURL, setAudioURL] = useState(null);
     const mediaRecorderRef = useRef(null);
@@ -13,6 +13,14 @@ export default function AudioRecorder({ onRecordingComplete, autoStart = false, 
             startRecording();
         }
     }, [autoStart]);
+
+    useImperativeHandle(ref, () => ({
+        stopRecording: () => {
+            if (isRecording) {
+                stopRecording();
+            }
+        }
+    }));
 
     const startRecording = async () => {
         try {
@@ -92,4 +100,6 @@ export default function AudioRecorder({ onRecordingComplete, autoStart = false, 
             )}
         </div>
     );
-}
+});
+
+export default AudioRecorder;
