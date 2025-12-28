@@ -65,7 +65,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
 
         // Determine Correct Answer (Phrase vs Frame)
         if (item.type === 'phrase') {
-            correct = item.text_cs;
+            correct = item.text; // Fixed: Use 'text' (from curriculum) not 'text_cs'
         } else {
             // Frame: Use an example phrase if available, otherwise template
             if (item.example_phrase_ids && item.example_phrase_ids.length > 0) {
@@ -82,7 +82,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                 }
 
                 if (examplePhrase) {
-                    correct = examplePhrase.text_cs; // Full Czech Phrase
+                    correct = examplePhrase.text; // Fixed: Use 'text'
                 } else {
                     // Fallback to template stripped of brackets
                     correct = item.template.replace(/\[.*?\]/g, "...").trim();
@@ -95,14 +95,14 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
         // Distractors
         const allPhrases = [];
         Object.values(curriculum).forEach(l => {
-            l.phrases.forEach(p => allPhrases.push(p.text_cs));
+            l.phrases.forEach(p => allPhrases.push(p.text)); // Fixed: Use 'text'
         });
 
         // Ensure distractors are not the same as correct
         const distractors = allPhrases
-            .filter(text => text !== correct)
+            .filter(text => text !== correct && text) // Ensure valid text
             .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
+            .slice(0, 4); // Fixed: 4 Distractors + 1 Correct = 5 Options
 
         const opts = [correct, ...distractors].sort(() => Math.random() - 0.5);
         setOptions(opts);
@@ -117,7 +117,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
 
         let correct;
         if (currentItem.type === 'phrase') {
-            correct = currentItem.text_cs;
+            correct = currentItem.text; // Fixed: Use 'text'
         } else {
             if (currentItem.example_phrase_ids && currentItem.example_phrase_ids.length > 0) {
                 let examplePhrase = null;
@@ -130,7 +130,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                     }
                 }
                 if (examplePhrase) {
-                    correct = examplePhrase.text_cs;
+                    correct = examplePhrase.text; // Fixed: Use 'text'
                 } else {
                     correct = currentItem.template.replace(/\[.*?\]/g, "...").trim();
                 }
@@ -237,7 +237,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                                 <button
                                     key={i}
                                     onClick={() => handleAnswer(opt)}
-                                    className="p-4 text-left border-2 border-gray-100 rounded-xl hover:border-brand-blue hover:bg-blue-50 font-medium text-lg text-gray-800 transition-all bg-white"
+                                    className="p-4 text-left border-2 border-gray-100 rounded-xl hover:border-brand-blue hover:bg-blue-50 font-medium text-lg text-black transition-all bg-white shadow-sm"
                                 >
                                     {opt}
                                 </button>
