@@ -61,23 +61,48 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
     };
 
     const prepareQuestion = (item) => {
-        // Correct Answer
-        const correct = item.type === 'phrase' ? item.text_cs : item.template;
-        const correctTrans = item.translation;
+        let correct;
+
+        // Determine Correct Answer (Phrase vs Frame)
+        if (item.type === 'phrase') {
+            correct = item.text_cs;
+        } else {
+            // Frame: Use an example phrase if available, otherwise template
+            if (item.example_phrase_ids && item.example_phrase_ids.length > 0) {
+                // Find first example
+                let examplePhrase = null;
+                // Scan curriculum to find the phrase object
+                const allLevels = Object.values(curriculum);
+                for (const lvl of allLevels) {
+                    const found = lvl.phrases.find(p => p.id === item.example_phrase_ids[0]);
+                    if (found) {
+                        examplePhrase = found;
+                        break;
+                    }
+                }
+
+                if (examplePhrase) {
+                    correct = examplePhrase.text_cs; // Full Czech Phrase
+                } else {
+                    // Fallback to template stripped of brackets
+                    correct = item.template.replace(/\[.*?\]/g, "...").trim();
+                }
+            } else {
+                correct = item.template.replace(/\[.*?\]/g, "...").trim();
+            }
+        }
 
         // Distractors
-        // Get random other items from curriculum (preferably same level)
         const allPhrases = [];
         Object.values(curriculum).forEach(l => {
-            l.phrases.forEach(p => allPhrases.push(p));
-            l.frames.forEach(f => allPhrases.push(f));
+            l.phrases.forEach(p => allPhrases.push(p.text_cs));
         });
 
+        // Ensure distractors are not the same as correct
         const distractors = allPhrases
-            .filter(p => p.id !== item.id)
+            .filter(text => text !== correct)
             .sort(() => Math.random() - 0.5)
-            .slice(0, 3)
-            .map(p => p.type === 'phrase' ? p.text_cs : p.template);
+            .slice(0, 3);
 
         const opts = [correct, ...distractors].sort(() => Math.random() - 0.5);
         setOptions(opts);
@@ -85,9 +110,36 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
 
     const handleAnswer = (selectedText) => {
         const currentItem = currentBatch[currentQuestionIndex];
-        const correctText = currentItem.type === 'phrase' ? currentItem.text_cs : currentItem.template;
+        // We need to match selectedText against the 'correct' value we generated in prepareQuestion.
+        // But prepareQuestion set state options only. 
+        // We re-derive correct answer logic here OR we should have stored it?
+        // Let's re-derive for consistency, carefully.
 
-        if (selectedText === correctText) {
+        let correct;
+        if (currentItem.type === 'phrase') {
+            correct = currentItem.text_cs;
+        } else {
+            if (currentItem.example_phrase_ids && currentItem.example_phrase_ids.length > 0) {
+                let examplePhrase = null;
+                const allLevels = Object.values(curriculum);
+                for (const lvl of allLevels) {
+                    const found = lvl.phrases.find(p => p.id === currentItem.example_phrase_ids[0]);
+                    if (found) {
+                        examplePhrase = found;
+                        break;
+                    }
+                }
+                if (examplePhrase) {
+                    correct = examplePhrase.text_cs;
+                } else {
+                    correct = currentItem.template.replace(/\[.*?\]/g, "...").trim();
+                }
+            } else {
+                correct = currentItem.template.replace(/\[.*?\]/g, "...").trim();
+            }
+        }
+
+        if (selectedText === correct) {
             soundManager.playSuccess();
             setScore(prev => prev + 1);
         } else {
@@ -101,7 +153,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
             prepareQuestion(currentBatch[nextIdx]);
         } else {
             // Batch Complete
-            finishBatch(selectedText === correctText ? score + 1 : score);
+            finishBatch(selectedText === correct ? score + 1 : score);
         }
     };
 
@@ -185,7 +237,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                                 <button
                                     key={i}
                                     onClick={() => handleAnswer(opt)}
-                                    className="p-4 text-left border-2 border-gray-100 rounded-xl hover:border-brand-blue hover:bg-blue-50 font-medium text-lg transition-all"
+                                    className="p-4 text-left border-2 border-gray-100 rounded-xl hover:border-brand-blue hover:bg-blue-50 font-medium text-lg text-gray-800 transition-all bg-white"
                                 >
                                     {opt}
                                 </button>

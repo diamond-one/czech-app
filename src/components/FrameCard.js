@@ -14,6 +14,7 @@ export default function FrameCard({ frame, examples = [], onResult, autoRecord =
     const [isRevealed, setIsRevealed] = useState(false);
     const [hasRecorded, setHasRecorded] = useState(false);
     const recorderRef = useRef(null);
+    const audioRef = useRef(null);
 
     const handleResult = (success) => {
         setIsRevealed(false);
@@ -42,10 +43,18 @@ export default function FrameCard({ frame, examples = [], onResult, autoRecord =
                     onClick={() => {
                         // Stop recorder playback if active
                         recorderRef.current?.stopPlayback();
+
+                        // Stop any existing example audio 
+                        if (audioRef.current) {
+                            audioRef.current.pause();
+                            audioRef.current.currentTime = 0;
+                        }
+
                         // Play pattern template
                         // Filter out brackets for better TTS? e.g. "Protože [CLAUSE]" -> "Protože..."
                         const cleanText = frame.template.replace(/\[.*?\]/g, "...").trim();
                         const audio = new Audio(`/api/tts?text=${encodeURIComponent(cleanText)}`);
+                        audioRef.current = audio;
                         audio.play().catch(e => console.error("Audio play error:", e));
                     }}
                     className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 opacity-50 hover:opacity-100 hover:text-brand-blue transition-all p-2 bg-gray-50 rounded-full shadow-sm"
