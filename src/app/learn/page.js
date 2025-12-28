@@ -29,12 +29,30 @@ export default function LearnPage() {
     const [isHeaderExpanded, setIsHeaderExpanded] = useState(false);
     const [autoRecord, setAutoRecord] = useState(false); // Default false for safety
 
-    // Load progress from localStorage
+    // Retention State
+    const [streak, setStreak] = useState(0);
+    const [nextReviewTime, setNextReviewTime] = useState(null);
+
+    // Load progress & streak from localStorage
     useEffect(() => {
-        const savedProgress = localStorage.getItem('czech-app-progress-v2'); // New key for new system
+        const savedProgress = localStorage.getItem('czech-app-progress-v2');
         if (savedProgress) {
             setProgress(JSON.parse(savedProgress));
         }
+
+        // Streak Logic: Check/Reset on load
+        const streakData = JSON.parse(localStorage.getItem('czech-app-streak') || '{"count": 0, "lastDate": ""}');
+        const today = new Date().toDateString();
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+        if (streakData.lastDate === today) {
+            setStreak(streakData.count);
+        } else if (streakData.lastDate === yesterday) {
+            setStreak(streakData.count); // Pending increment today
+        } else {
+            setStreak(0); // Broken streak
+        }
+
         setIsLoaded(true);
     }, []);
 
@@ -175,15 +193,28 @@ export default function LearnPage() {
 
     }, [isLoaded, progress, isPracticeMode]);
 
-    // Set current card
+    // Set current card & Calculate Next Review
     useEffect(() => {
         if (queue.length > 0 && !currentCard) {
             setCurrentCard(queue[0]);
         } else if (queue.length === 0) {
             setCurrentCard(null);
             if (isPracticeMode) setIsPracticeMode(false);
+
+            // Calculate next review time
+            const now = new Date();
+            let earliest = null;
+            Object.values(progress).forEach(p => {
+                if (p.nextReviewDate) {
+                    const date = new Date(p.nextReviewDate);
+                    if (date > now) {
+                        if (!earliest || date < earliest) earliest = date;
+                    }
+                }
+            });
+            setNextReviewTime(earliest);
         }
-    }, [queue, currentCard, isPracticeMode]);
+    }, [queue, currentCard, isPracticeMode, progress]);
 
 
     // --- HANDLERS ---
@@ -191,6 +222,22 @@ export default function LearnPage() {
     const handleRecording = () => {
         if (!currentCard) return;
         const cardId = currentCard.id;
+
+        // --- STREAK UPDATE ---
+        const today = new Date().toDateString();
+        const streakData = JSON.parse(localStorage.getItem('czech-app-streak') || '{"count": 0, "lastDate": ""}');
+
+        if (streakData.lastDate !== today) {
+            // First action of the day!
+            const newCount = (streakData.lastDate === new Date(Date.now() - 86400000).toDateString())
+                ? streakData.count + 1
+                : 1;
+
+            setStreak(newCount);
+            localStorage.setItem('czech-app-streak', JSON.stringify({ count: newCount, lastDate: today }));
+        }
+        // ---------------------
+
         const prev = progress[cardId] || { interval: 0, ease: 2.5, spokenCount: 0 };
 
         const newStats = {
@@ -314,6 +361,9 @@ export default function LearnPage() {
                         <div className="bg-white px-4 py-2 rounded-full shadow-sm text-sm font-bold text-brand-blue border border-gray-200">
                             Lv {userLevel}
                         </div>
+                        <div className="bg-white px-3 py-2 rounded-full shadow-sm text-sm font-bold text-orange-500 border border-gray-200 flex items-center gap-1">
+                            🔥 {streak}
+                        </div>
                         <span className="text-sm text-gray-500 whitespace-nowrap">{queue.length} left</span>
                     </div>
                 </div>
@@ -380,6 +430,15 @@ export default function LearnPage() {
                     <div className="text-center flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
                         <h2 className="text-3xl font-bold text-gray-800">Review Complete!</h2>
                         <p className="text-gray-600">You've hit your goals for now.</p>
+                        {nextReviewTime && (
+                            <div className="text-sm text-brand-blue bg-blue-50 px-4 py-2 rounded-full mt-2 font-medium">
+                                Next cards available: {nextReviewTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                <br />
+                                <span className="text-xs opacity-75">
+                                    (in {Math.ceil((nextReviewTime - new Date()) / (1000 * 60 * 60))} hours)
+                                </span>
+                            </div>
+                        )}
                         <button onClick={startPractice} className="mt-4 px-8 py-3 bg-brand-teal text-white font-bold rounded-lg shadow hover:bg-opacity-90 transition-transform hover:scale-105">
                             Keep Practicing
                         </button>
