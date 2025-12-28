@@ -11,8 +11,9 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
     const [batchesPassed, setBatchesPassed] = useState(0);
     const [learnedItems, setLearnedItems] = useState([]); // Items passed in this session
 
-    // Options for current question
+    // Options & Text for current question
     const [options, setOptions] = useState([]);
+    const [currentQuestionText, setCurrentQuestionText] = useState(""); // Explicit state for question text
 
     if (!isOpen) return null;
 
@@ -62,10 +63,12 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
 
     const prepareQuestion = (item) => {
         let correct;
+        let questionText;
 
         // Determine Correct Answer (Phrase vs Frame)
         if (item.type === 'phrase') {
             correct = item.text; // Fixed: Use 'text' (from curriculum) not 'text_cs'
+            questionText = item.translation;
         } else {
             // Frame: Use an example phrase if available, otherwise template
             if (item.example_phrase_ids && item.example_phrase_ids.length > 0) {
@@ -82,15 +85,20 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                 }
 
                 if (examplePhrase) {
-                    correct = examplePhrase.text; // Fixed: Use 'text'
+                    correct = examplePhrase.text;
+                    questionText = examplePhrase.translation; // Use Example's translation
                 } else {
                     // Fallback to template stripped of brackets
                     correct = item.template.replace(/\[.*?\]/g, "...").trim();
+                    questionText = item.description; // Fallback to description
                 }
             } else {
                 correct = item.template.replace(/\[.*?\]/g, "...").trim();
+                questionText = item.description;
             }
         }
+
+        setCurrentQuestionText(questionText);
 
         // Distractors
         const allPhrases = [];
@@ -117,7 +125,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
 
         let correct;
         if (currentItem.type === 'phrase') {
-            correct = currentItem.text; // Fixed: Use 'text'
+            correct = currentItem.text;
         } else {
             if (currentItem.example_phrase_ids && currentItem.example_phrase_ids.length > 0) {
                 let examplePhrase = null;
@@ -130,7 +138,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                     }
                 }
                 if (examplePhrase) {
-                    correct = examplePhrase.text; // Fixed: Use 'text'
+                    correct = examplePhrase.text;
                 } else {
                     correct = currentItem.template.replace(/\[.*?\]/g, "...").trim();
                 }
@@ -228,7 +236,7 @@ export default function FastTrackModal({ isOpen, onClose, curriculum, userLevel,
                         <div className="mb-8 text-center">
                             <p className="text-gray-400 text-sm mb-2 uppercase">How do you say...</p>
                             <h3 className="text-2xl font-bold text-gray-800">
-                                "{currentBatch[currentQuestionIndex]?.translation}"
+                                "{currentQuestionText}"
                             </h3>
                         </div>
 
