@@ -190,6 +190,18 @@ export default function LearnPage() {
             }
         }
 
+        // onBoarding check: If progress is empty, auto-inject first 5 items
+        const isFreshUser = Object.keys(progress).length === 0;
+
+        if (isFreshUser && newQueue.length === 0) {
+            const lvl1 = curriculum['level_1'];
+            const allItems = [...lvl1.phrases, ...lvl1.frames];
+            // Take first 5
+            for (let i = 0; i < 5 && i < allItems.length; i++) {
+                newQueue.push(allItems[i]);
+            }
+        }
+
         // Randomize queue slightly to mix phrases/frames?
         // Prioritize: Phrases first? 
         // Let's just keep standard order but randomly sort ensures variety
@@ -498,8 +510,12 @@ export default function LearnPage() {
                     )
                 ) : (
                     <div className="text-center flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-                        <h2 className="text-3xl font-bold text-gray-800">Review Complete!</h2>
-                        <p className="text-gray-600">You've hit your goals for now.</p>
+                        <h2 className="text-3xl font-bold text-gray-800">
+                            {Object.keys(progress).length < 5 ? "Ready to start?" : "Review Complete!"}
+                        </h2>
+                        <p className="text-gray-600">
+                            {Object.keys(progress).length < 5 ? "Let's unlock your first words." : "You've hit your goals for now."}
+                        </p>
                         {nextReviewTime && (
                             <div className="text-sm text-brand-blue bg-blue-50 px-4 py-2 rounded-full mt-2 font-medium">
                                 Next cards available: {nextReviewTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

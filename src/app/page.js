@@ -20,7 +20,7 @@ export default function Home() {
     // Splash Timer
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 1500);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
