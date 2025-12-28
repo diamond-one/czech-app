@@ -10,7 +10,7 @@ import AudioRecorder from './AudioRecorder';
   User must speak a valid variation.
   Reveal shows examples.
 */
-export default function FrameCard({ frame, examples = [], onResult }) {
+export default function FrameCard({ frame, examples = [], onResult, autoRecord = false }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [hasRecorded, setHasRecorded] = useState(false);
 
@@ -55,8 +55,17 @@ export default function FrameCard({ frame, examples = [], onResult }) {
             </p>
 
             {/* Audio Recorder */}
+            {/* Audio Recorder */}
             <div className="w-full">
-                <AudioRecorder onRecordingComplete={() => setHasRecorded(true)} />
+                <AudioRecorder
+                    onRecordingComplete={() => {
+                        setHasRecorded(true);
+                        setIsRevealed(true);
+                    }}
+                    autoStart={autoRecord}
+                // For Frame cards, we don't have a single "native audio" to compare against easily
+                // because the user creates their own variations. So we omit nativeAudioSrc here.
+                />
             </div>
 
             {/* Reveal / Examples */}

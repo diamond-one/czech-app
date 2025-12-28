@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import AudioRecorder from './AudioRecorder';
 
-export default function Flashcard({ card, supportingWords = [], onRate, onRecording, progress = null }) {
+export default function Flashcard({ card, supportingWords = [], onRate, onRecording, progress = null, autoRecord = false }) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [hasRecorded, setHasRecorded] = useState(false);
 
@@ -65,10 +65,16 @@ export default function Flashcard({ card, supportingWords = [], onRate, onRecord
             {/* Audio Recorder for practice */}
             <div className="w-full">
                 <p className="text-sm text-gray-500 text-center mb-2">Speak it aloud:</p>
-                <AudioRecorder onRecordingComplete={() => {
-                    setHasRecorded(true);
-                    if (onRecording) onRecording();
-                }} />
+                <AudioRecorder
+                    onRecordingComplete={() => {
+                        setHasRecorded(true);
+                        if (onRecording) onRecording();
+                        // Auto-Reveal Feature
+                        setIsRevealed(true);
+                    }}
+                    autoStart={autoRecord}
+                    nativeAudioSrc={`/api/tts?text=${encodeURIComponent(audioQuery)}`}
+                />
                 {hasRecorded && <p className="text-center text-xs text-green-500 font-bold mt-1">Recording Captured! (+1 Progress)</p>}
             </div>
 

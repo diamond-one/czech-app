@@ -25,6 +25,10 @@ export default function LearnPage() {
     });
     const [isPracticeMode, setIsPracticeMode] = useState(false);
 
+    // UI Settings
+    const [isHeaderExpanded, setIsHeaderExpanded] = useState(false);
+    const [autoRecord, setAutoRecord] = useState(false); // Default false for safety
+
     // Load progress from localStorage
     useEffect(() => {
         const savedProgress = localStorage.getItem('czech-app-progress-v2'); // New key for new system
@@ -300,16 +304,22 @@ export default function LearnPage() {
             <header className="w-full max-w-4xl flex flex-col gap-4 mb-8">
                 <div className="flex justify-between items-center">
                     <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium flex items-center gap-2">← Home</Link>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setIsHeaderExpanded(!isHeaderExpanded)}
+                            className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                        >
+                            {isHeaderExpanded ? '🔼' : '🔽'}
+                        </button>
                         <div className="bg-white px-4 py-2 rounded-full shadow-sm text-sm font-bold text-brand-blue border border-gray-200">
-                            {currentLevelData ? currentLevelData.title : `Level ${userLevel}`}
+                            Lv {userLevel}
                         </div>
-                        <span className="text-sm text-gray-500">{queue.length} due</span>
+                        <span className="text-sm text-gray-500 whitespace-nowrap">{queue.length} left</span>
                     </div>
                 </div>
 
-                {/* Level Stats Bar */}
-                {currentLevelData && (
+                {/* Level Stats Bar (Collapsible) */}
+                {currentLevelData && isHeaderExpanded && (
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-2">
                         <div className="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest">
                             <span>Voice Confidence ({Math.round(((levelStats.spokenCurrent || 0) / (levelStats.spokenTarget || 1)) * 100)}%)</span>
@@ -321,12 +331,25 @@ export default function LearnPage() {
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                             Current Level Progress: {Math.round(((levelStats.spokenCurrent || 0) / (levelStats.spokenTarget || 1)) * 100)}% Spoken Mastery
+                            {levelStats.readyForChallenge && (
+                                <Link href={`/challenge/${userLevel}`} className="mt-2 block w-full text-center py-2 bg-brand-orange text-white font-bold rounded-lg animate-pulse hover:animate-none shadow-lg transform transition hover:scale-105">
+                                    🔥 UNLOCK LEVEL {userLevel + 1} CHALLENGE 🔥
+                                </Link>
+                            )}
                         </div>
-                        {levelStats.readyForChallenge && (
-                            <Link href={`/challenge/${userLevel}`} className="mt-2 block w-full text-center py-2 bg-brand-orange text-white font-bold rounded-lg animate-pulse hover:animate-none shadow-lg transform transition hover:scale-105">
-                                🔥 UNLOCK LEVEL {userLevel + 1} CHALLENGE 🔥
-                            </Link>
-                        )}
+
+                        {/* Settings Toggles */}
+                        <div className="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
+                            <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={autoRecord}
+                                    onChange={(e) => setAutoRecord(e.target.checked)}
+                                    className="w-4 h-4 text-brand-blue rounded focus:ring-brand-blue"
+                                />
+                                <span>Auto-Record</span>
+                            </label>
+                        </div>
                     </div>
                 )}
             </header>
@@ -342,6 +365,7 @@ export default function LearnPage() {
                             onRate={handlePhraseRate}
                             onRecording={handleRecording}
                             progress={progress[currentCard.id]}
+                            autoRecord={autoRecord}
                         />
                     ) : (
                         <FrameCard
@@ -349,6 +373,7 @@ export default function LearnPage() {
                             frame={currentCard}
                             examples={getFrameExamples(currentCard)}
                             onResult={handleFrameResult}
+                            autoRecord={autoRecord}
                         />
                     )
                 ) : (

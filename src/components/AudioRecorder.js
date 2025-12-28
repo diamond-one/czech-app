@@ -1,12 +1,18 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-export default function AudioRecorder({ onRecordingComplete }) {
+export default function AudioRecorder({ onRecordingComplete, autoStart = false, nativeAudioSrc = null }) {
     const [isRecording, setIsRecording] = useState(false);
     const [audioURL, setAudioURL] = useState(null);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
+
+    useEffect(() => {
+        if (autoStart) {
+            startRecording();
+        }
+    }, [autoStart]);
 
     const startRecording = async () => {
         try {
@@ -67,8 +73,21 @@ export default function AudioRecorder({ onRecordingComplete }) {
             </div>
 
             {audioURL && (
-                <div className="w-full flex justify-center">
-                    <audio controls src={audioURL} className="w-full max-w-xs" />
+                <div className="w-full flex flex-col items-center gap-2">
+                    <audio
+                        controls
+                        autoPlay
+                        src={audioURL}
+                        className="w-full max-w-xs"
+                        onEnded={() => {
+                            if (nativeAudioSrc) {
+                                // Play native comparison
+                                const native = new Audio(nativeAudioSrc);
+                                native.play().catch(console.error);
+                            }
+                        }}
+                    />
+                    {nativeAudioSrc && <p className="text-xs text-brand-blue font-bold">Auto-Compare Active</p>}
                 </div>
             )}
         </div>
