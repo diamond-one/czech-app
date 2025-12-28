@@ -36,7 +36,27 @@ export default function FrameCard({ frame, examples = [], onResult, autoRecord =
             </div>
 
             {/* Pattern Template */}
-            <div className="text-center py-4">
+            <div className="text-center py-4 relative group">
+                {/* Audio Preview for Pattern */}
+                <button
+                    onClick={() => {
+                        // Stop recorder playback if active
+                        recorderRef.current?.stopPlayback();
+                        // Play pattern template
+                        // Filter out brackets for better TTS? e.g. "Protože [CLAUSE]" -> "Protože..."
+                        const cleanText = frame.template.replace(/\[.*?\]/g, "...").trim();
+                        const audio = new Audio(`/api/tts?text=${encodeURIComponent(cleanText)}`);
+                        audio.play().catch(e => console.error("Audio play error:", e));
+                    }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 opacity-50 hover:opacity-100 hover:text-brand-blue transition-all p-2 bg-gray-50 rounded-full shadow-sm"
+                    title="Hear Pattern"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+
                 <h2 className="text-3xl font-mono font-bold text-gray-800 tracking-wide">
                     {frame.template}
                 </h2>
@@ -102,6 +122,7 @@ export default function FrameCard({ frame, examples = [], onResult, autoRecord =
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
+                                                recorderRef.current?.stopPlayback(); // STOP RECORDER PLAYBACK
                                                 const audio = new Audio(`/api/tts?text=${encodeURIComponent(ex.audio_text || ex.text)}`);
                                                 audio.play().catch(e => console.error("Audio play error:", e));
                                             }}

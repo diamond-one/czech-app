@@ -396,6 +396,7 @@ export default function LearnPage() {
             // No new items in this level? Maybe bump level?
             // For MVP, we just say "Level Complete!"
             setUnlockReason("Level complete! Challenge unlocked?");
+            setUnlockEligible('level_complete'); // Force UI update
         }
     };
 

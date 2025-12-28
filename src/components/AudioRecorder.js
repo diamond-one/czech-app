@@ -7,6 +7,7 @@ const AudioRecorder = forwardRef(({ onRecordingComplete, autoStart = false, nati
     const [audioURL, setAudioURL] = useState(null);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
+    const audioRef = useRef(null);
 
     useEffect(() => {
         if (autoStart) {
@@ -18,6 +19,12 @@ const AudioRecorder = forwardRef(({ onRecordingComplete, autoStart = false, nati
         stopRecording: () => {
             if (isRecording) {
                 stopRecording();
+            }
+        },
+        stopPlayback: () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
             }
         }
     }));
@@ -83,6 +90,7 @@ const AudioRecorder = forwardRef(({ onRecordingComplete, autoStart = false, nati
             {audioURL && (
                 <div className="w-full flex flex-col items-center gap-2">
                     <audio
+                        ref={audioRef}
                         controls
                         autoPlay
                         src={audioURL}
