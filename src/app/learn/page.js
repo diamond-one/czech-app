@@ -220,7 +220,7 @@ export default function LearnPage() {
             setCurrentCard(null);
             if (isPracticeMode) setIsPracticeMode(false);
 
-            // --- ADAPTIVE UNLOCK CHECK (Condition A) ---
+            // --- ADAPTIVE UNLOCK CHECK (Redesigned) ---
             if (!hasCheckedUnlock && !isPracticeMode) {
                 // Check Condition B (Performance)
                 const recallRate = sessionStats.total > 0 ? (sessionStats.correct / sessionStats.total) : 1;
@@ -237,15 +237,13 @@ export default function LearnPage() {
                 const stabilityPass = (avgInterval >= 1) || (unstableRatio < 0.3) || (activeItems.length === 0);
 
                 if (performancePass && stabilityPass) {
-                    setUnlockEligible('eligible');
-                    setUnlockReason("Great job! You're ready for more.");
+                    setUnlockEligible('eligible'); // State B: Standard Unlock
+                } else if (performancePass && !stabilityPass) {
+                    setUnlockEligible('stable_block'); // State C: Stability Wait (Overrideable)
                 } else {
-                    setUnlockEligible('ineligible');
-                    let reasons = [];
-                    if (!performancePass) reasons.push(`Recall accuracy (${Math.round(recallRate * 100)}%) is below 80%.`);
-                    if (!stabilityPass) reasons.push("Too many items are still unstable.");
-                    setUnlockReason(reasons.join(" ") + " Let's strengthen what you know.");
+                    setUnlockEligible('perf_block'); // State D: Performance Lock
                 }
+
                 setHasCheckedUnlock(true);
             }
 
@@ -510,44 +508,74 @@ export default function LearnPage() {
                         />
                     )
                 ) : (
-                    <div className="text-center flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-                        <h2 className="text-3xl font-bold text-gray-800">
-                            {Object.keys(progress).length < 5 ? "Ready to start?" : "Review Complete!"}
-                        </h2>
-                        <p className="text-gray-600">
-                            {Object.keys(progress).length < 5 ? "Let's unlock your first words." : "You've hit your goals for now."}
-                        </p>
-                        {nextReviewTime && (
-                            <div className="text-sm text-brand-blue bg-blue-50 px-4 py-2 rounded-full mt-2 font-medium">
-                                Next cards available: {nextReviewTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                <br />
-                                <span className="text-xs opacity-75">
-                                    (in {Math.ceil((nextReviewTime - new Date()) / (1000 * 60 * 60))} hours)
-                                </span>
-                            </div>
-                        )}
-                        {unlockEligible === 'eligible' && (
-                            <div className="animate-in slide-in-from-bottom-5">
-                                <p className="text-brand-blue font-bold text-lg mb-2">🎉 You're ready for more!</p>
-                                <button onClick={unlockNewItems} className="px-8 py-3 bg-brand-blue text-white font-bold rounded-lg shadow hover:bg-opacity-90 transition-transform hover:scale-105">
-                                    Unlock 5 New Items
+                    <div className="text-center flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-300 max-w-md mx-auto">
+
+                        {/* STATE A: ONBOARDING */}
+                        {Object.keys(progress).length < 5 ? (
+                            <>
+                                <h2 className="text-3xl font-bold text-gray-800">Ready to start?</h2>
+                                <p className="text-gray-600">Let's unlock your first words.</p>
+                                <button onClick={unlockNewItems} className="px-8 py-3 bg-brand-blue text-white font-bold rounded-lg shadow-lg hover:bg-opacity-90 transform hover:scale-105 transition-all">
+                                    Unlock First 5 Words
                                 </button>
-                            </div>
-                        )}
+                            </>
+                        ) : (
+                            /* REVIEW COMPLETE STATES */
+                            <>
+                                {/* Header Logic */}
+                                {unlockEligible === 'eligible' ? (
+                                    <h2 className="text-3xl font-bold text-brand-blue">Great Job! 🎉</h2>
+                                ) : unlockEligible === 'stable_block' ? (
+                                    <h2 className="text-2xl font-bold text-gray-800">All Caught Up! ivore</h2>
+                                ) : (
+                                    <h2 className="text-2xl font-bold text-gray-800">Keep Practicing 💪</h2>
+                                )}
 
-                        {unlockEligible === 'ineligible' && (
-                            <div className="bg-orange-50 p-4 rounded-lg max-w-sm">
-                                <p className="text-orange-800 font-bold mb-1">Locked for now 🔒</p>
-                                <p className="text-sm text-orange-700">{unlockReason}</p>
-                            </div>
-                        )}
+                                {/* Subtext Logic */}
+                                <p className="text-gray-600 px-4">
+                                    {unlockEligible === 'eligible'
+                                        ? "Your recall is strong. You're ready for more."
+                                        : unlockEligible === 'stable_block'
+                                            ? "We recommend letting these words sink in for a bit."
+                                            : "Let's improve your recall accuracy before adding new words."}
+                                </p>
 
-                        <div className="border-t pt-4 w-full flex justify-center">
-                            <button onClick={startPractice} className="text-gray-500 font-medium hover:text-brand-teal transition-colors flex items-center gap-2">
-                                <span>Review All Words</span>
-                                <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">No SRS impact</span>
-                            </button>
-                        </div>
+                                {/* Actions Area */}
+                                <div className="flex flex-col gap-3 w-full px-8">
+
+                                    {/* 1. Unlock Button (Primary if Eligible) */}
+                                    {unlockEligible === 'eligible' && (
+                                        <button onClick={unlockNewItems} className="w-full py-3 bg-brand-blue text-white font-bold rounded-lg shadow-lg hover:bg-opacity-90 transition-all">
+                                            Unlock 5 New Words
+                                        </button>
+                                    )}
+
+                                    {/* 2. Review Button (Primary if Locked) */}
+                                    <button onClick={startPractice} className={`w-full py-3 font-bold rounded-lg transition-colors ${unlockEligible === 'eligible' ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-brand-teal text-white shadow-md hover:bg-opacity-90'}`}>
+                                        Review All Words
+                                    </button>
+
+                                    {/* 3. Override Option (Only for Stability Block) */}
+                                    {unlockEligible === 'stable_block' && (
+                                        <button onClick={unlockNewItems} className="text-xs text-gray-400 hover:text-brand-blue underline mt-2">
+                                            I found this lesson easy - Unlock More
+                                        </button>
+                                    )}
+
+                                    {/* 4. Return Home (Always available fallback) */}
+                                    <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 mt-2">
+                                        Return Home
+                                    </Link>
+                                </div>
+
+                                {/* Next Review info */}
+                                {nextReviewTime && (
+                                    <div className="text-xs text-center text-gray-400 mt-4 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
+                                        Next review due: {nextReviewTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </div>
                 )}
             </div>
