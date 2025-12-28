@@ -66,6 +66,7 @@ export default function ChallengePage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [hasRecorded, setHasRecorded] = useState(false);
     const [isRevealed, setIsRevealed] = useState(false);
+    const [autoRecord, setAutoRecord] = useState(false);
 
     const handleNext = (success) => {
         if (!success) {
@@ -105,6 +106,18 @@ export default function ChallengePage() {
                 <div className="w-full bg-gray-800 h-1 mt-4 rounded-full">
                     <div className="bg-brand-teal h-full transition-all duration-500" style={{ width: `${((currentStep) / challenge.steps.length) * 100}%` }}></div>
                 </div>
+                <div className="w-full bg-gray-800 h-1 mt-4 rounded-full">
+                    <div className="bg-brand-teal h-full transition-all duration-500" style={{ width: `${((currentStep) / challenge.steps.length) * 100}%` }}></div>
+                </div>
+                <label className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-2 cursor-pointer hover:text-gray-300">
+                    <input
+                        type="checkbox"
+                        checked={autoRecord}
+                        onChange={(e) => setAutoRecord(e.target.checked)}
+                        className="w-3 h-3 rounded bg-gray-700 border-gray-600 text-brand-teal focus:ring-brand-teal"
+                    />
+                    <span>Auto-Record</span>
+                </label>
             </header>
 
             <div className="flex-1 w-full max-w-md flex flex-col items-center justify-center gap-8">
@@ -116,7 +129,11 @@ export default function ChallengePage() {
                 </div>
 
                 <div className="w-full bg-gray-800 p-6 rounded-xl border border-gray-700">
-                    <AudioRecorder onRecordingComplete={() => setHasRecorded(true)} />
+                    <AudioRecorder
+                        onRecordingComplete={() => setHasRecorded(true)}
+                        autoStart={autoRecord}
+                        nativeAudioSrc={`/api/tts?text=${encodeURIComponent(step.expected)}`}
+                    />
                 </div>
 
                 <div className="w-full">

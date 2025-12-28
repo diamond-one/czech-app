@@ -15,6 +15,12 @@ export default function LearnPage() {
     const [progress, setProgress] = useState({});
     const [isLoaded, setIsLoaded] = useState(false);
 
+    // Adaptive Session State
+    const [sessionStats, setSessionStats] = useState({ correct: 0, total: 0 });
+    const [unlockEligible, setUnlockEligible] = useState(null); // null, 'eligible', or 'ineligible'
+    const [unlockReason, setUnlockReason] = useState("");
+    const [hasCheckedUnlock, setHasCheckedUnlock] = useState(false);
+
     // Computed state
     const [userLevel, setUserLevel] = useState(1);
     const [levelStats, setLevelStats] = useState({
@@ -158,11 +164,11 @@ export default function LearnPage() {
             for (const item of items) {
                 const prog = progress[item.id];
 
-                // New Item (Only for current level)
+                // New Item (Only for current level) - BLOCKED BY DEFAULT
+                // In Adaptive Mode, we do NOT auto-push new items.
+                // We only push DUE items. 
                 if (!prog) {
-                    if (levelNum === calculatedLevel) {
-                        newQueue.push(item);
-                    }
+                    // Skip new items initially
                     continue;
                 }
 
@@ -193,13 +199,42 @@ export default function LearnPage() {
 
     }, [isLoaded, progress, isPracticeMode]);
 
-    // Set current card & Calculate Next Review
+    // Set current card & Calculate Next Review / Unlock Status
     useEffect(() => {
         if (queue.length > 0 && !currentCard) {
             setCurrentCard(queue[0]);
         } else if (queue.length === 0) {
             setCurrentCard(null);
             if (isPracticeMode) setIsPracticeMode(false);
+
+            // --- ADAPTIVE UNLOCK CHECK (Condition A) ---
+            if (!hasCheckedUnlock && !isPracticeMode) {
+                // Check Condition B (Performance)
+                const recallRate = sessionStats.total > 0 ? (sessionStats.correct / sessionStats.total) : 1;
+                const performancePass = recallRate >= 0.8;
+
+                // Check Condition C (Stability)
+                const activeItems = Object.values(progress).filter(p => p.interval > 0);
+                const avgInterval = activeItems.length > 0
+                    ? activeItems.reduce((acc, curr) => acc + curr.interval, 0) / activeItems.length
+                    : 0;
+                const unstableItems = activeItems.filter(p => p.interval < 3).length; // <3 days considered "unstable"
+                const unstableRatio = activeItems.length > 0 ? unstableItems / activeItems.length : 0;
+
+                const stabilityPass = (avgInterval >= 1) || (unstableRatio < 0.3) || (activeItems.length === 0);
+
+                if (performancePass && stabilityPass) {
+                    setUnlockEligible('eligible');
+                    setUnlockReason("Great job! You're ready for more.");
+                } else {
+                    setUnlockEligible('ineligible');
+                    let reasons = [];
+                    if (!performancePass) reasons.push(`Recall accuracy (${Math.round(recallRate * 100)}%) is below 80%.`);
+                    if (!stabilityPass) reasons.push("Too many items are still unstable.");
+                    setUnlockReason(reasons.join(" ") + " Let's strengthen what you know.");
+                }
+                setHasCheckedUnlock(true);
+            }
 
             // Calculate next review time
             const now = new Date();
@@ -214,7 +249,7 @@ export default function LearnPage() {
             });
             setNextReviewTime(earliest);
         }
-    }, [queue, currentCard, isPracticeMode, progress]);
+    }, [queue, currentCard, isPracticeMode, progress, sessionStats, hasCheckedUnlock]);
 
 
     // --- HANDLERS ---
@@ -269,6 +304,12 @@ export default function LearnPage() {
         const newProgress = { ...progress, [cardId]: newStats };
         saveProgress(newProgress);
 
+        // Track Session Stats
+        setSessionStats(prev => ({
+            correct: prev.correct + (quality >= 3 ? 1 : 0),
+            total: prev.total + 1
+        }));
+
         // Advance Queue
         setQueue(prev => prev.slice(1));
         setCurrentCard(null);
@@ -316,6 +357,35 @@ export default function LearnPage() {
         practiceItems.sort(() => Math.random() - 0.5);
         setQueue(practiceItems.slice(0, 10));
         setIsPracticeMode(true);
+    };
+
+    // Unlock New Items Handler
+    const unlockNewItems = () => {
+        let newItems = [];
+        // Scan curriculum for unlearned items in userLevel
+        // Limit to 5 items (Load Control)
+
+        const lvlData = curriculum[`level_${userLevel}`];
+        if (lvlData) {
+            const allItems = [...lvlData.phrases, ...lvlData.frames];
+            for (const item of allItems) {
+                if (!progress[item.id] && newItems.length < 5) {
+                    newItems.push(item);
+                }
+            }
+        }
+
+        if (newItems.length > 0) {
+            setQueue(newItems);
+            // Reset check state so we can check again after this mini-session? 
+            // Or typically we do 1 inject per session. User says "Introduce at most 5-10 new items per session".
+            // So we treat this as the injection. 
+            setUnlockEligible('claimed');
+        } else {
+            // No new items in this level? Maybe bump level?
+            // For MVP, we just say "Level Complete!"
+            setUnlockReason("Level complete! Challenge unlocked?");
+        }
     };
 
     // Helper: Get supporting words for current phrase
@@ -439,9 +509,28 @@ export default function LearnPage() {
                                 </span>
                             </div>
                         )}
-                        <button onClick={startPractice} className="mt-4 px-8 py-3 bg-brand-teal text-white font-bold rounded-lg shadow hover:bg-opacity-90 transition-transform hover:scale-105">
-                            Keep Practicing
-                        </button>
+                        {unlockEligible === 'eligible' && (
+                            <div className="animate-in slide-in-from-bottom-5">
+                                <p className="text-brand-blue font-bold text-lg mb-2">🎉 You're ready for more!</p>
+                                <button onClick={unlockNewItems} className="px-8 py-3 bg-brand-blue text-white font-bold rounded-lg shadow hover:bg-opacity-90 transition-transform hover:scale-105">
+                                    Unlock 5 New Items
+                                </button>
+                            </div>
+                        )}
+
+                        {unlockEligible === 'ineligible' && (
+                            <div className="bg-orange-50 p-4 rounded-lg max-w-sm">
+                                <p className="text-orange-800 font-bold mb-1">Locked for now 🔒</p>
+                                <p className="text-sm text-orange-700">{unlockReason}</p>
+                            </div>
+                        )}
+
+                        <div className="border-t pt-4 w-full flex justify-center">
+                            <button onClick={startPractice} className="text-gray-500 font-medium hover:text-brand-teal transition-colors flex items-center gap-2">
+                                <span>Unlimited Practice Mode</span>
+                                <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">No SRS impact</span>
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
