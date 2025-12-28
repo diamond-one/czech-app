@@ -7,13 +7,21 @@ import curriculum from '../data/curriculum.json';
 export default function Home() {
   const [progress, setProgress] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
+    // Load data
     const saved = localStorage.getItem('czech-app-progress-v2');
     if (saved) {
       setProgress(JSON.parse(saved));
     }
     setIsLoaded(true);
+
+    // Splash Timer
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Determine User's Current Level based on Challenge Completion
@@ -27,7 +35,18 @@ export default function Home() {
     return progress?.challenges?.[lvlNum] === true;
   };
 
-  if (!isLoaded) return <div className="p-10 text-center text-gray-500">Loading your journey...</div>;
+  if (showSplash || !isLoaded) {
+    return (
+      <div className="min-h-screen bg-brand-blue flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
+        <div className="relative w-48 h-48 mb-6 animate-bounce">
+          {/* Using the icon directly as an image */}
+          <img src="/icons/icon-v3-192.png" alt="Czech Patterns Logo" className="w-full h-full object-contain rounded-3xl shadow-2xl" />
+        </div>
+        <h1 className="text-4xl font-bold text-white tracking-widest uppercase">Czech Patterns</h1>
+        <p className="text-brand-teal text-opacity-80 mt-2 font-medium">Speak from Day One</p>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
@@ -52,13 +71,13 @@ export default function Home() {
 
           return (
             <div key={key} className={`flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${unlocked
-                ? 'bg-white border-brand-blue shadow-sm'
-                : 'bg-gray-100 border-gray-200 opacity-75'
+              ? 'bg-white border-brand-blue shadow-sm'
+              : 'bg-gray-100 border-gray-200 opacity-75'
               }`}>
               {/* Status Icon */}
               <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 text-sm font-bold bg-white z-10 ${completed ? 'border-green-500 text-green-500' :
-                  unlocked ? 'border-brand-blue text-brand-blue animate-pulse' :
-                    'border-gray-300 text-gray-400'
+                unlocked ? 'border-brand-blue text-brand-blue animate-pulse' :
+                  'border-gray-300 text-gray-400'
                 }`}>
                 {completed ? '✓' : levelNum}
               </div>
@@ -78,8 +97,8 @@ export default function Home() {
                   <Link
                     href="/learn"
                     className={`inline-block px-4 py-2 rounded-lg text-sm font-bold transition-colors ${completed
-                        ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        : 'bg-brand-blue text-white hover:bg-opacity-90 shadow-md'
+                      ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'bg-brand-blue text-white hover:bg-opacity-90 shadow-md'
                       }`}
                   >
                     {completed ? "Review" : "Continue Path"}

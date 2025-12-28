@@ -20,12 +20,12 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Czech Pattern App",
+  title: "Czech Patterns",
   description: "Learn Czech through spoken patterns.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icons/icon-192.png",
-    apple: "/icons/icon-192.png",
+    icon: "/icons/icon-v3-192.png",
+    apple: "/icons/icon-v3-192.png",
   }
 };
 
