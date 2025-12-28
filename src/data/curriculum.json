@@ -1,0 +1,988 @@
+{
+    "level_1": {
+        "id": "level_1",
+        "title": "Survival Interaction",
+        "goal": "Greet politely, introduce yourself, order items, and ask for help.",
+        "unlock_criteria": {
+            "phrases_mastered_pct": 0.7,
+            "frames_usable_pct": 0.8
+        },
+        "frames": [
+            {
+                "id": "frame_1a",
+                "type": "frame",
+                "template": "Prosím [NOUN]",
+                "description": "Polite request / Ordering (Accusative Case)",
+                "slot_definitions": {
+                    "NOUN": "Object you want (often ends in -u for feminine)"
+                },
+                "example_phrase_ids": [
+                    "phrase_1a_1",
+                    "phrase_1a_2",
+                    "phrase_1a_3"
+                ]
+            },
+            {
+                "id": "frame_1b",
+                "type": "frame",
+                "template": "Já jsem [NAME]",
+                "description": "Introducing yourself",
+                "slot_definitions": {
+                    "NAME": "Your name"
+                },
+                "example_phrase_ids": [
+                    "phrase_1b_1",
+                    "phrase_1b_2",
+                    "phrase_1b_ex3"
+                ]
+            },
+            {
+                "id": "frame_1c",
+                "type": "frame",
+                "template": "Kde je [PLACE/THING]?",
+                "description": "Asking for location",
+                "slot_definitions": {
+                    "PLACE/THING": "The place or object"
+                },
+                "example_phrase_ids": [
+                    "phrase_1c_1",
+                    "phrase_1c_2",
+                    "phrase_1c_3"
+                ]
+            },
+            {
+                "id": "frame_1d",
+                "type": "frame",
+                "template": "Mluvím trochu [LANGUAGE]",
+                "description": "Language Skills",
+                "slot_definitions": {
+                    "LANGUAGE": "Language (adverbial)"
+                },
+                "example_phrase_ids": [
+                    "phrase_1d_1",
+                    "phrase_1d_ex2",
+                    "phrase_1d_ex3"
+                ]
+            }
+        ],
+        "phrases": [
+            {
+                "id": "phrase_1a_1",
+                "type": "phrase",
+                "text": "Prosím kávu.",
+                "translation": "Coffee, please.",
+                "pronunciation": "Pro-seem kah-vu",
+                "audio_text": "Prosím kávu",
+                "frame_id": "frame_1a",
+                "word_ids": [
+                    "word_prosim",
+                    "word_kava"
+                ]
+            },
+            {
+                "id": "phrase_1a_2",
+                "type": "phrase",
+                "text": "Prosím vodu.",
+                "translation": "Water, please.",
+                "pronunciation": "Pro-seem vo-du",
+                "audio_text": "Prosím vodu",
+                "frame_id": "frame_1a",
+                "word_ids": [
+                    "word_prosim",
+                    "word_voda"
+                ]
+            },
+            {
+                "id": "phrase_1a_3",
+                "type": "phrase",
+                "text": "Prosím účet.",
+                "translation": "The bill, please.",
+                "pronunciation": "Pro-seem oo-chet",
+                "audio_text": "Prosím účet",
+                "frame_id": "frame_1a",
+                "tags": [
+                    "restaurant"
+                ],
+                "word_ids": [
+                    "word_prosim",
+                    "word_ucet"
+                ]
+            },
+            {
+                "id": "phrase_1b_1",
+                "type": "phrase",
+                "text": "Já jsem Tomáš.",
+                "translation": "I am Tomáš.",
+                "pronunciation": "Yah sem Tom-ahsh",
+                "audio_text": "Já jsem Tomáš",
+                "frame_id": "frame_1b",
+                "word_ids": [
+                    "word_ja",
+                    "word_jsem"
+                ]
+            },
+            {
+                "id": "phrase_1b_2",
+                "type": "phrase",
+                "text": "Já jsem Anna.",
+                "translation": "I am Anna.",
+                "pronunciation": "Yah sem Ah-na",
+                "audio_text": "Já jsem Anna",
+                "frame_id": "frame_1b",
+                "word_ids": [
+                    "word_ja",
+                    "word_jsem"
+                ]
+            },
+            {
+                "id": "phrase_1b_3",
+                "type": "phrase",
+                "text": "Jsem Tomáš.",
+                "translation": "I'm Tomáš (Casual).",
+                "pronunciation": "Sem Tom-ahsh",
+                "audio_text": "Jsem Tomáš",
+                "frame_id": "frame_1b",
+                "tags": [
+                    "variation"
+                ],
+                "word_ids": [
+                    "word_jsem"
+                ]
+            },
+            {
+                "id": "phrase_1b_ex3",
+                "type": "phrase",
+                "text": "Já jsem Petr.",
+                "translation": "I am Petr.",
+                "pronunciation": "Yah sem Pe-trr",
+                "audio_text": "Já jsem Petr",
+                "frame_id": "frame_1b",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_ja",
+                    "word_jsem"
+                ]
+            },
+            {
+                "id": "phrase_1c_1",
+                "type": "phrase",
+                "text": "Kde je toaleta?",
+                "translation": "Where is the toilet?",
+                "pronunciation": "Gdeh yeh to-ah-le-ta",
+                "audio_text": "Kde je toaleta",
+                "frame_id": "frame_1c",
+                "word_ids": [
+                    "word_kde",
+                    "word_je",
+                    "word_toaleta"
+                ]
+            },
+            {
+                "id": "phrase_1c_2",
+                "type": "phrase",
+                "text": "Kde je metro?",
+                "translation": "Where is the metro?",
+                "pronunciation": "Gdeh yeh met-ro",
+                "audio_text": "Kde je metro",
+                "frame_id": "frame_1c",
+                "word_ids": [
+                    "word_kde",
+                    "word_je",
+                    "word_metro"
+                ]
+            },
+            {
+                "id": "phrase_1c_3",
+                "type": "phrase",
+                "text": "Kde je hotel?",
+                "translation": "Where is the hotel?",
+                "pronunciation": "Gdeh yeh ho-tel",
+                "audio_text": "Kde je hotel",
+                "frame_id": "frame_1c",
+                "word_ids": [
+                    "word_kde",
+                    "word_je",
+                    "word_hotel"
+                ]
+            },
+            {
+                "id": "phrase_1d_1",
+                "type": "phrase",
+                "text": "Mluvím trochu česky.",
+                "translation": "I speak a little Czech.",
+                "pronunciation": "Mloo-veem tro-khu ches-ki",
+                "audio_text": "Mluvím trochu česky",
+                "frame_id": "frame_1d",
+                "tags": [
+                    "core",
+                    "anxiety-reducing"
+                ],
+                "word_ids": [
+                    "word_mluvim",
+                    "word_trochu",
+                    "word_cesky"
+                ]
+            },
+            {
+                "id": "phrase_1d_ex2",
+                "type": "phrase",
+                "text": "Mluvím trochu anglicky.",
+                "translation": "I speak a little English.",
+                "pronunciation": "Mloo-veem tro-khu an-glits-ki",
+                "audio_text": "Mluvím trochu anglicky",
+                "frame_id": "frame_1d",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_mluvim",
+                    "word_trochu"
+                ]
+            },
+            {
+                "id": "phrase_1d_ex3",
+                "type": "phrase",
+                "text": "Mluvím trochu německy.",
+                "translation": "I speak a little German.",
+                "pronunciation": "Mloo-veem tro-khu nye-mets-ki",
+                "audio_text": "Mluvím trochu německy",
+                "frame_id": "frame_1d",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_mluvim",
+                    "word_trochu"
+                ]
+            },
+            {
+                "id": "phrase_1_bonus_1",
+                "type": "phrase",
+                "text": "Nerozumím.",
+                "translation": "I don't understand.",
+                "pronunciation": "Ne-ro-zu-meem",
+                "audio_text": "Nerozumím",
+                "word_ids": [
+                    "word_nerozumim"
+                ]
+            },
+            {
+                "id": "phrase_1_bonus_2",
+                "type": "phrase",
+                "text": "Děkuji.",
+                "translation": "Thank you.",
+                "pronunciation": "Dyeh-ku-yi",
+                "audio_text": "Děkuji",
+                "word_ids": [
+                    "word_dekuji"
+                ]
+            }
+        ],
+        "words": [
+            {
+                "id": "word_prosim",
+                "lemma": "prosím",
+                "translation": "please"
+            },
+            {
+                "id": "word_kava",
+                "lemma": "káva",
+                "translation": "coffee"
+            },
+            {
+                "id": "word_voda",
+                "lemma": "voda",
+                "translation": "water"
+            },
+            {
+                "id": "word_ucet",
+                "lemma": "účet",
+                "translation": "bill/check"
+            },
+            {
+                "id": "word_ja",
+                "lemma": "já",
+                "translation": "I"
+            },
+            {
+                "id": "word_jsem",
+                "lemma": "být",
+                "translation": "am (to be)"
+            },
+            {
+                "id": "word_kde",
+                "lemma": "kde",
+                "translation": "where"
+            },
+            {
+                "id": "word_je",
+                "lemma": "být",
+                "translation": "is (to be)"
+            },
+            {
+                "id": "word_toaleta",
+                "lemma": "toaleta",
+                "translation": "toilet"
+            },
+            {
+                "id": "word_metro",
+                "lemma": "metro",
+                "translation": "metro"
+            },
+            {
+                "id": "word_hotel",
+                "lemma": "hotel",
+                "translation": "hotel"
+            },
+            {
+                "id": "word_nerozumim",
+                "lemma": "rozumět",
+                "translation": "understand (neg)"
+            },
+            {
+                "id": "word_dekuji",
+                "lemma": "děkovat",
+                "translation": "thank"
+            },
+            {
+                "id": "word_mluvim",
+                "lemma": "mluvit",
+                "translation": "speak"
+            },
+            {
+                "id": "word_trochu",
+                "lemma": "trochu",
+                "translation": "a little"
+            },
+            {
+                "id": "word_cesky",
+                "lemma": "česky",
+                "translation": "Czech"
+            }
+        ]
+    },
+    "level_2": {
+        "id": "level_2",
+        "title": "Wants & Needs",
+        "goal": "Express desires, needs, and ask about prices.",
+        "unlock_criteria": {
+            "phrases_mastered_pct": 0.7,
+            "frames_usable_pct": 0.8
+        },
+        "frames": [
+            {
+                "id": "frame_2a",
+                "type": "frame",
+                "template": "Chci [NOUN/INFINITIVE]",
+                "description": "Expressing desire",
+                "slot_definitions": {
+                    "NOUN/INFINITIVE": "What you want / want to do"
+                },
+                "example_phrase_ids": [
+                    "phrase_2a_1",
+                    "phrase_2a_2",
+                    "phrase_2a_3"
+                ]
+            },
+            {
+                "id": "frame_2b",
+                "type": "frame",
+                "template": "Potřebuji [NOUN/INFINITIVE]",
+                "description": "Expressing necessity",
+                "slot_definitions": {
+                    "NOUN/INFINITIVE": "What you need"
+                },
+                "example_phrase_ids": [
+                    "phrase_2b_1",
+                    "phrase_2b_2",
+                    "phrase_2b_ex3"
+                ]
+            },
+            {
+                "id": "frame_2c",
+                "type": "frame",
+                "template": "Kolik stojí [NOUN]?",
+                "description": "Asking for price",
+                "slot_definitions": {
+                    "NOUN": "Item"
+                },
+                "example_phrase_ids": [
+                    "phrase_2c_1",
+                    "phrase_2c_2",
+                    "phrase_2c_ex3"
+                ]
+            }
+        ],
+        "phrases": [
+            {
+                "id": "phrase_2a_1",
+                "type": "phrase",
+                "text": "Chci pivo.",
+                "translation": "I want a beer.",
+                "pronunciation": "Khtsi pi-vo",
+                "audio_text": "Chci pivo",
+                "frame_id": "frame_2a",
+                "word_ids": [
+                    "word_chci",
+                    "word_pivo"
+                ]
+            },
+            {
+                "id": "phrase_2a_3",
+                "type": "phrase",
+                "text": "Chci spát.",
+                "translation": "I want to sleep.",
+                "pronunciation": "Khtsi spaht",
+                "audio_text": "Chci spát",
+                "frame_id": "frame_2a",
+                "word_ids": [
+                    "word_chci",
+                    "word_spat"
+                ]
+            },
+            {
+                "id": "phrase_2a_4",
+                "type": "phrase",
+                "text": "Chci pracovat.",
+                "translation": "I want to work.",
+                "pronunciation": "Khtsi pra-tso-vat",
+                "audio_text": "Chci pracovat",
+                "frame_id": "frame_2a",
+                "word_ids": [
+                    "word_chci",
+                    "word_pracovat"
+                ]
+            },
+            {
+                "id": "phrase_2b_1",
+                "type": "phrase",
+                "text": "Potřebuji pomoc.",
+                "translation": "I need help.",
+                "pronunciation": "Po-tre-byu-yi po-mots",
+                "audio_text": "Potřebuji pomoc",
+                "frame_id": "frame_2b",
+                "word_ids": [
+                    "word_potrebuji",
+                    "word_pomoc"
+                ]
+            },
+            {
+                "id": "phrase_2b_2",
+                "type": "phrase",
+                "text": "Potřebuji lístek.",
+                "translation": "I need a ticket.",
+                "pronunciation": "Po-tre-byu-yi lees-tek",
+                "audio_text": "Potřebuji lístek",
+                "frame_id": "frame_2b",
+                "word_ids": [
+                    "word_potrebuji",
+                    "word_listek"
+                ]
+            },
+            {
+                "id": "phrase_2b_ex3",
+                "type": "phrase",
+                "text": "Potřebuji vodu.",
+                "translation": "I need water.",
+                "pronunciation": "Po-tre-byu-yi vo-du",
+                "audio_text": "Potřebuji vodu",
+                "frame_id": "frame_2b",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_potrebuji",
+                    "word_voda"
+                ]
+            },
+            {
+                "id": "phrase_2c_1",
+                "type": "phrase",
+                "text": "Kolik stojí pivo?",
+                "translation": "How much does the beer cost?",
+                "pronunciation": "Ko-lik stoy-ee pi-vo",
+                "audio_text": "Kolik stojí pivo",
+                "frame_id": "frame_2c",
+                "word_ids": [
+                    "word_kolik",
+                    "word_stoji",
+                    "word_pivo"
+                ]
+            },
+            {
+                "id": "phrase_2c_2",
+                "type": "phrase",
+                "text": "Kolik stojí lístek?",
+                "translation": "How much does a ticket cost?",
+                "pronunciation": "Ko-lik stoy-ee lees-tek",
+                "audio_text": "Kolik stojí lístek",
+                "frame_id": "frame_2c",
+                "word_ids": [
+                    "word_kolik",
+                    "word_stoji",
+                    "word_listek"
+                ]
+            },
+            {
+                "id": "phrase_2c_ex3",
+                "type": "phrase",
+                "text": "Kolik stojí voda?",
+                "translation": "How much does water cost?",
+                "pronunciation": "Ko-lik stoy-ee vo-da",
+                "audio_text": "Kolik stojí voda",
+                "frame_id": "frame_2c",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_kolik",
+                    "word_stoji",
+                    "word_voda"
+                ]
+            }
+        ],
+        "words": [
+            {
+                "id": "word_chci",
+                "lemma": "chtít",
+                "translation": "want"
+            },
+            {
+                "id": "word_pivo",
+                "lemma": "pivo",
+                "translation": "beer"
+            },
+            {
+                "id": "word_jit",
+                "lemma": "jít",
+                "translation": "go"
+            },
+            {
+                "id": "word_domu",
+                "lemma": "domů",
+                "translation": "home (direction)"
+            },
+            {
+                "id": "word_spat",
+                "lemma": "spát",
+                "translation": "sleep"
+            },
+            {
+                "id": "word_potrebuji",
+                "lemma": "potřebovat",
+                "translation": "need"
+            },
+            {
+                "id": "word_pomoc",
+                "lemma": "pomoc",
+                "translation": "help"
+            },
+            {
+                "id": "word_listek",
+                "lemma": "lístek",
+                "translation": "ticket"
+            },
+            {
+                "id": "word_kolik",
+                "lemma": "kolik",
+                "translation": "how much"
+            },
+            {
+                "id": "word_stoji",
+                "lemma": "stát",
+                "translation": "cost/stand"
+            }
+        ]
+    },
+    "level_3": {
+        "id": "level_3",
+        "title": "Daily Actions",
+        "goal": "Describe your routine, yesterday, and future plans.",
+        "unlock_criteria": {
+            "phrases_mastered_pct": 0.7,
+            "frames_usable_pct": 0.8
+        },
+        "frames": [
+            {
+                "id": "frame_3a",
+                "type": "frame",
+                "template": "Dnes [VERB]",
+                "description": "Describing today / routine",
+                "slot_definitions": {
+                    "VERB": "Present tense action"
+                },
+                "example_phrase_ids": [
+                    "phrase_3a_1",
+                    "phrase_3a_2",
+                    "phrase_3a_ex3"
+                ]
+            },
+            {
+                "id": "frame_3b",
+                "type": "frame",
+                "template": "Včera jsem [PAST_VERB]",
+                "description": "Describing the past",
+                "slot_definitions": {
+                    "PAST_VERB": "Past participle (masc: -l / fem: -la)"
+                },
+                "example_phrase_ids": [
+                    "phrase_3b_1",
+                    "phrase_3b_2",
+                    "phrase_3b_ex3"
+                ]
+            },
+            {
+                "id": "frame_3c",
+                "type": "frame",
+                "template": "Zítra budu [INFINITIVE]",
+                "description": "Future intent",
+                "slot_definitions": {
+                    "INFINITIVE": "Action to perform"
+                },
+                "example_phrase_ids": [
+                    "phrase_3c_1",
+                    "phrase_3c_2",
+                    "phrase_3c_ex3"
+                ]
+            }
+        ],
+        "phrases": [
+            {
+                "id": "phrase_3a_1",
+                "type": "phrase",
+                "text": "Dnes pracuji.",
+                "translation": "Today I am working.",
+                "audio_text": "Dnes pracuji",
+                "frame_id": "frame_3a",
+                "word_ids": [
+                    "word_dnes",
+                    "word_pracuji"
+                ]
+            },
+            {
+                "id": "phrase_3a_2",
+                "type": "phrase",
+                "text": "Dnes studuji.",
+                "translation": "Today I am studying.",
+                "audio_text": "Dnes studuji",
+                "frame_id": "frame_3a",
+                "word_ids": [
+                    "word_dnes",
+                    "word_studuji"
+                ]
+            },
+            {
+                "id": "phrase_3a_ex3",
+                "type": "phrase",
+                "text": "Dnes cestuji.",
+                "translation": "Today I am traveling.",
+                "audio_text": "Dnes cestuji",
+                "frame_id": "frame_3a",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_dnes",
+                    "word_cestovat"
+                ]
+            },
+            {
+                "id": "phrase_3b_1",
+                "type": "phrase",
+                "text": "Včera jsem pracoval.",
+                "translation": "Yesterday I worked.",
+                "audio_text": "Včera jsem pracoval",
+                "frame_id": "frame_3b",
+                "word_ids": [
+                    "word_vcera",
+                    "word_sem",
+                    "word_pracoval"
+                ]
+            },
+            {
+                "id": "phrase_3b_2",
+                "type": "phrase",
+                "text": "Včera jsem spal.",
+                "translation": "Yesterday I slept.",
+                "audio_text": "Včera jsem spal",
+                "frame_id": "frame_3b",
+                "word_ids": [
+                    "word_vcera",
+                    "word_sem",
+                    "word_spal"
+                ]
+            },
+            {
+                "id": "phrase_3b_ex3",
+                "type": "phrase",
+                "text": "Včera jsem cestoval.",
+                "translation": "Yesterday I traveled.",
+                "audio_text": "Včera jsem cestoval",
+                "frame_id": "frame_3b",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_vcera",
+                    "word_sem",
+                    "word_cestovat"
+                ]
+            },
+            {
+                "id": "phrase_3c_1",
+                "type": "phrase",
+                "text": "Zítra budu pracovat.",
+                "translation": "Tomorrow I will work.",
+                "audio_text": "Zítra budu pracovat",
+                "frame_id": "frame_3c",
+                "word_ids": [
+                    "word_zitra",
+                    "word_budu",
+                    "word_pracovat"
+                ]
+            },
+            {
+                "id": "phrase_3c_2",
+                "type": "phrase",
+                "text": "Zítra budu cestovat.",
+                "translation": "Tomorrow I will travel.",
+                "audio_text": "Zítra budu cestovat",
+                "frame_id": "frame_3c",
+                "word_ids": [
+                    "word_zitra",
+                    "word_budu",
+                    "word_cestovat"
+                ]
+            },
+            {
+                "id": "phrase_3c_ex3",
+                "type": "phrase",
+                "text": "Zítra budu spát.",
+                "translation": "Tomorrow I will sleep.",
+                "audio_text": "Zítra budu spát",
+                "frame_id": "frame_3c",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_zitra",
+                    "word_budu",
+                    "word_spat"
+                ]
+            }
+        ],
+        "words": [
+            {
+                "id": "word_dnes",
+                "lemma": "dnes",
+                "translation": "today"
+            },
+            {
+                "id": "word_pracuji",
+                "lemma": "pracovat",
+                "translation": "work (I)"
+            },
+            {
+                "id": "word_studuji",
+                "lemma": "studovat",
+                "translation": "study (I)"
+            },
+            {
+                "id": "word_vcera",
+                "lemma": "včera",
+                "translation": "yesterday"
+            },
+            {
+                "id": "word_sem",
+                "lemma": "být",
+                "translation": "auxiliary (am)"
+            },
+            {
+                "id": "word_pracoval",
+                "lemma": "pracovat",
+                "translation": "worked"
+            },
+            {
+                "id": "word_spal",
+                "lemma": "spát",
+                "translation": "slept"
+            },
+            {
+                "id": "word_zitra",
+                "lemma": "zítra",
+                "translation": "tomorrow"
+            },
+            {
+                "id": "word_budu",
+                "lemma": "být",
+                "translation": "will be"
+            },
+            {
+                "id": "word_pracovat",
+                "lemma": "pracovat",
+                "translation": "work (inf)"
+            },
+            {
+                "id": "word_cestovat",
+                "lemma": "cestovat",
+                "translation": "travel (inf)"
+            }
+        ]
+    },
+    "level_4": {
+        "id": "level_4",
+        "title": "Opinions & Situations",
+        "goal": "Explain problems, give opinions, and narrate simple events.",
+        "unlock_criteria": {
+            "phrases_mastered_pct": 0.7,
+            "frames_usable_pct": 0.8
+        },
+        "frames": [
+            {
+                "id": "frame_4a",
+                "type": "frame",
+                "template": "Myslím si, že [CLAUSE]",
+                "description": "Expressing opinion",
+                "slot_definitions": {
+                    "CLAUSE": "A full sentence"
+                },
+                "example_phrase_ids": [
+                    "phrase_4a_1",
+                    "phrase_4a_2",
+                    "phrase_4a_ex3"
+                ]
+            },
+            {
+                "id": "frame_4b",
+                "type": "frame",
+                "template": "Musím [INFINITIVE]",
+                "description": "Obligation / Necessity",
+                "slot_definitions": {
+                    "INFINITIVE": "Verb"
+                },
+                "example_phrase_ids": [
+                    "phrase_4b_1",
+                    "phrase_4b_2"
+                ]
+            }
+        ],
+        "phrases": [
+            {
+                "id": "phrase_4a_1",
+                "type": "phrase",
+                "text": "Myslím si, že je to dobré.",
+                "translation": "I think that it is good.",
+                "audio_text": "Myslím si, že je to dobré",
+                "frame_id": "frame_4a",
+                "word_ids": [
+                    "word_myslim",
+                    "word_ze",
+                    "word_dobre"
+                ]
+            },
+            {
+                "id": "phrase_4a_2",
+                "type": "phrase",
+                "text": "Myslím si, že to není pravda.",
+                "translation": "I think that it is not true.",
+                "audio_text": "Myslím si, že to není pravda",
+                "frame_id": "frame_4a",
+                "word_ids": [
+                    "word_myslim",
+                    "word_ze",
+                    "word_neni",
+                    "word_pravda"
+                ]
+            },
+            {
+                "id": "phrase_4a_ex3",
+                "type": "phrase",
+                "text": "Myslím si, že je to problém.",
+                "translation": "I think that is a problem.",
+                "audio_text": "Myslím si, že je to problém",
+                "frame_id": "frame_4a",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_myslim",
+                    "word_ze"
+                ]
+            },
+            {
+                "id": "phrase_4b_2",
+                "type": "phrase",
+                "text": "Musím pracovat.",
+                "translation": "I must work.",
+                "audio_text": "Musím pracovat",
+                "frame_id": "frame_4b",
+                "word_ids": [
+                    "word_musim",
+                    "word_pracovat"
+                ]
+            },
+            {
+                "id": "phrase_4b_1",
+                "type": "phrase",
+                "text": "Musím jít domů.",
+                "translation": "I must go home.",
+                "audio_text": "Musím jít domů",
+                "frame_id": "frame_4b",
+                "word_ids": [
+                    "word_musim",
+                    "word_jit",
+                    "word_domu"
+                ]
+            },
+            {
+                "id": "phrase_4b_ex3",
+                "type": "phrase",
+                "text": "Musím spát.",
+                "translation": "I must sleep.",
+                "audio_text": "Musím spát",
+                "frame_id": "frame_4b",
+                "tags": [
+                    "example"
+                ],
+                "word_ids": [
+                    "word_musim",
+                    "word_spat"
+                ]
+            }
+        ],
+        "words": [
+            {
+                "id": "word_myslim",
+                "lemma": "myslet",
+                "translation": "think"
+            },
+            {
+                "id": "word_ze",
+                "lemma": "že",
+                "translation": "that"
+            },
+            {
+                "id": "word_dobre",
+                "lemma": "dobrý",
+                "translation": "good"
+            },
+            {
+                "id": "word_neni",
+                "lemma": "být",
+                "translation": "is not"
+            },
+            {
+                "id": "word_pravda",
+                "lemma": "pravda",
+                "translation": "true/truth"
+            },
+            {
+                "id": "word_musim",
+                "lemma": "muset",
+                "translation": "must"
+            }
+        ]
+    }
+}

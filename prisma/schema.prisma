@@ -1,0 +1,38 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Item {
+  id             String   @id @default(uuid())
+  type           String   // WORD, PHRASE, SENTENCE
+  czechText      String
+  englishMeaning String
+  audioPath      String?
+  level          Int      @default(1)
+  tags           String?
+  reviews        Review[]
+  createdAt      DateTime @default(now())
+}
+
+model Review {
+  id             String   @id @default(uuid())
+  itemId         String
+  item           Item     @relation(fields: [itemId], references: [id])
+  nextReviewDate DateTime
+  interval       Int      @default(0)
+  easeFactor     Float    @default(2.5)
+  streak         Int      @default(0)
+  lastReviewed   DateTime @default(now())
+}
+
+model ActivityLog {
+  id              String   @id @default(uuid())
+  type            String   // SPEAKING, LISTENING
+  durationSeconds Int
+  timestamp       DateTime @default(now())
+}

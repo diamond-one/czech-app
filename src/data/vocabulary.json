@@ -1,0 +1,142 @@
+[
+    {
+        "id": "1",
+        "level": 1,
+        "czech": "Ahoj",
+        "english": "Hello / Hi",
+        "pronunciation": "Ah-hoy"
+    },
+    {
+        "id": "2",
+        "level": 1,
+        "czech": "Děkuji",
+        "english": "Thank you",
+        "pronunciation": "Dyeh-ku-yi"
+    },
+    {
+        "id": "3",
+        "level": 1,
+        "czech": "Prosím",
+        "english": "Please / You're welcome",
+        "pronunciation": "Pro-seem"
+    },
+    {
+        "id": "4",
+        "level": 1,
+        "czech": "Dobré ráno",
+        "english": "Good morning",
+        "pronunciation": "Dob-reh rah-no"
+    },
+    {
+        "id": "5",
+        "level": 1,
+        "czech": "Ano",
+        "english": "Yes",
+        "pronunciation": "Ah-no"
+    },
+    {
+        "id": "6",
+        "level": 2,
+        "czech": "Ne",
+        "english": "No",
+        "pronunciation": "Neh"
+    },
+    {
+        "id": "7",
+        "level": 2,
+        "czech": "Na shledanou",
+        "english": "Goodbye",
+        "pronunciation": "Nah skleh-dah-noh"
+    },
+    {
+        "id": "8",
+        "level": 2,
+        "czech": "Dobrou noc",
+        "english": "Good night",
+        "pronunciation": "Dob-roh nots"
+    },
+    {
+        "id": "9",
+        "level": 2,
+        "czech": "Jak se máš?",
+        "english": "How are you? (Informal)",
+        "pronunciation": "Yak seh mah-sh"
+    },
+    {
+        "id": "10",
+        "level": 2,
+        "czech": "Dobře",
+        "english": "Good / Well",
+        "pronunciation": "Dob-rzheh"
+    },
+    {
+        "id": "11",
+        "level": 3,
+        "czech": "Pivo",
+        "english": "Beer",
+        "pronunciation": "Pi-vo"
+    },
+    {
+        "id": "12",
+        "level": 3,
+        "czech": "Voda",
+        "english": "Water",
+        "pronunciation": "Vo-da"
+    },
+    {
+        "id": "13",
+        "level": 3,
+        "czech": "Káva",
+        "english": "Coffee",
+        "pronunciation": "Kah-va"
+    },
+    {
+        "id": "14",
+        "level": 3,
+        "czech": "Účet, prosím",
+        "english": "The bill, please",
+        "pronunciation": "Oo-chet pro-seem"
+    },
+    {
+        "id": "15",
+        "level": 3,
+        "czech": "Kolik to stojí?",
+        "english": "How much does it cost?",
+        "pronunciation": "Ko-lik to stoy-ee"
+    },
+    {
+        "id": "16",
+        "level": 4,
+        "czech": "Nerozumím",
+        "english": "I don't understand",
+        "pronunciation": "Ne-ro-zu-meem"
+    },
+    {
+        "id": "17",
+        "level": 4,
+        "czech": "Mluvíte anglicky?",
+        "english": "Do you speak English?",
+        "pronunciation": "Mlu-vee-te ang-lits-ki"
+    },
+    {
+        "id": "18",
+        "level": 4,
+        "czech": "Promiňte",
+        "english": "Excuse me / Sorry",
+        "pronunciation": "Pro-min-te"
+    },
+    {
+        "id": "19",
+        "level": 4,
+        "czech": "Kde je toaleta?",
+        "english": "Where is the toilet?",
+        "pronunciation": "Kdeh yeh to-ah-le-ta"
+    },
+    {
+        "id": "20",
+        "level": 4,
+        "czech": "Jmenuji se...",
+        "english": "My name is...",
+        "pronunciation": "Ymen-u-yi seh"
+    }
+]

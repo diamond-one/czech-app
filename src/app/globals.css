@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #3F9AAE;
+  --color-brand-teal: #79C9C5;
+  --color-brand-yellow: #FFE2AF;
+  --color-brand-orange: #F96E5B;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Force Light Mode variables even in Dark Mode for now to ensure contrast safety */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    /* Was #0a0a0a */
+    --foreground: #171717;
+    /* Was #ededed */
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
