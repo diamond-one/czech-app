@@ -131,7 +131,7 @@ export default function LearnPage() {
 
                 const challengePassed = progress.challenges && progress.challenges[levelNum];
 
-                if (phrasePct >= 0.7 && framePct >= 0.8) {
+                if (phrasePct >= 0.0 && framePct >= 0.0) {
                     if (challengePassed) {
                         calculatedLevel = levelNum + 1;
                     } else {
@@ -224,28 +224,8 @@ export default function LearnPage() {
 
             // --- ADAPTIVE UNLOCK CHECK (Redesigned) ---
             if (!hasCheckedUnlock && !isPracticeMode) {
-                // Check Condition B (Performance)
-                const recallRate = sessionStats.total > 0 ? (sessionStats.correct / sessionStats.total) : 1;
-                const performancePass = recallRate >= 0.8;
-
-                // Check Condition C (Stability)
-                const activeItems = Object.values(progress).filter(p => p.interval > 0);
-                const avgInterval = activeItems.length > 0
-                    ? activeItems.reduce((acc, curr) => acc + curr.interval, 0) / activeItems.length
-                    : 0;
-                const unstableItems = activeItems.filter(p => p.interval < 3).length; // <3 days considered "unstable"
-                const unstableRatio = activeItems.length > 0 ? unstableItems / activeItems.length : 0;
-
-                const stabilityPass = (avgInterval >= 1) || (unstableRatio < 0.3) || (activeItems.length === 0);
-
-                if (performancePass && stabilityPass) {
-                    setUnlockEligible('eligible'); // State B: Standard Unlock
-                } else if (performancePass && !stabilityPass) {
-                    setUnlockEligible('stable_block'); // State C: Stability Wait (Overrideable)
-                } else {
-                    setUnlockEligible('perf_block'); // State D: Performance Lock
-                }
-
+                // REMOVED THROTTLING: Always allow unlocking new items
+                setUnlockEligible('eligible');
                 setHasCheckedUnlock(true);
             }
 
